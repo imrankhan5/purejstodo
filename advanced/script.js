@@ -25,7 +25,8 @@ function generateTodos (todos) {
      checkbox = `<input class="toggle_checkbox" type="checkbox"  value="${todos[i].id}" checked>`;
     }
     var deleteButton = ` <button class="delete_button" value='${todos[i].id}'>delete</button> `;
-    var todohtml = checkbox + todo + deleteButton;
+    var updateButton = ` <button class="update_button" value='${todos[i].id}'>edit</button> `;
+    var todohtml = checkbox + todo + updateButton + deleteButton;
     var mytodos = mytodos + '<li>'+ todohtml +'</li>';
   }
   var mytodos = mytodos + '<ul>';
@@ -34,6 +35,41 @@ function generateTodos (todos) {
 
 function addTodoInDom () {
   todotag.innerHTML = generateTodos(todos);
+}
+
+function updateDom (id) {
+    var todo = todos.find(function(todo) {
+      return todo.id == id
+    })
+    console.log('todo', todo);
+    
+  var input = `
+      <h1>Update todo </h1>
+      <input data-id="${ todo.id }" onkeypress="updateTodo(event)" type="text" id='updatedom_input' value="${todo.todo}" />
+    `
+    document.getElementById('update_todo').innerHTML = input;
+}
+
+function updateTodo(event) {
+  var update_input = document.getElementById('updatedom_input');
+  if (event.charCode === 13 && update_input.value.length > 1) {
+    var id = update_input.dataset.id;
+    var value = update_input.value
+    var seletedTodo = todos.find(function(todo) {
+      return todo.id == id
+    })
+    var seletedTodoIndex = todos.findIndex(function(todo) {
+      return todo.id == id
+    }) 
+    var todo = {
+      complete: seletedTodo.complete,
+      id: seletedTodo.id,
+      todo: value
+    }
+    todos.splice(seletedTodoIndex, 1, todo)
+    addTodoInDom();
+    document.getElementById('update_todo').innerHTML = '';
+  }
 }
 addTodoInDom();
 
@@ -54,7 +90,7 @@ function toggleCompletion (id, bool) {
   console.log('t', id);
     var seletedTodo = todos.find(function(todo) {
       return todo.id == id
-    }.bind(this))
+    })
     var seletedTodoIndex = todos.findIndex(function(todo) {
       return todo.id == id
     }) 
@@ -89,5 +125,8 @@ document.querySelector('body').addEventListener('click', function (event) {
   } 
   if (event.target.className.toLowerCase() === 'delete_button') {
     deleteTodo(event.target.value);
+  } 
+  if (event.target.className.toLowerCase() === 'update_button') {
+    updateDom(event.target.value);
   } 
 });
