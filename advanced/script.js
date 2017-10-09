@@ -23,7 +23,7 @@ function generateTodos (todos) {
     var checkbox = `<input class="toggle_checkbox" type="checkbox" value="${todos[i].id}" >`;
     if (todos[i].complete) {
      checkbox = `<input class="toggle_checkbox" type="checkbox"  value="${todos[i].id}" checked>`;
-     todo = `<strike>${todo}</strike>`;
+     todo = `<span class="line_through">${todo}</span>`;
     }
     var deleteButton = ` <button class="delete_button" value='${todos[i].id}'>delete</button> `;
     var updateButton = ` <button class="update_button" value='${todos[i].id}'>edit</button> `;
